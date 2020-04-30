@@ -2,16 +2,23 @@ package org.nikhil.springbootwebapp.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.Size;
+
 import org.springframework.stereotype.Component;
 
 public class Todo {
 
 	private int id;
 	private String user;
+	
+	@Size(min=10,message = "Add an actual description da dai!!")
 	private String description;
 	private Date targetDate;
 	private boolean isDone;
 
+	public Todo() {
+		super();
+	}
 	public Todo(int id, String user, String description, Date targetDate, boolean isDone) {
 		super();
 		this.id = id;

@@ -1,0 +1,14 @@
+<nav role="navigation" class="navbar navbar-expand-sm bg-light navbar-light">
+	<div class="container-fluid">
+		<div class="navbar-brand">
+			<a class="navbar-brand">MyTodoApp</a>
+		</div>
+		<!--  <div class="nav navbar-collapse">-->
+			<ul class="nav navbar-nav">
+				<li class="nav-item"><a class="nav-link" href="/login">Home</a></li>
+				<li class="nav-item"><a class="nav-link" href="/list-todos">Todos</a></li>
+
+			</ul>
+		<!-- </div> -->
+	</div>
+</nav>

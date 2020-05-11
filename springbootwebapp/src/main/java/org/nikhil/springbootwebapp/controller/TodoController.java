@@ -2,10 +2,12 @@ package org.nikhil.springbootwebapp.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.nikhil.springbootwebapp.model.Todo;
+import org.nikhil.springbootwebapp.service.TodoRepository;
 import org.nikhil.springbootwebapp.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -24,8 +26,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class TodoController {
 	
+	/*
+	 * @Autowired TodoService todoService;
+	 */
+	
 	@Autowired
-	TodoService todoService;
+	TodoRepository repository;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -40,7 +46,8 @@ public class TodoController {
 	public String showTodos(ModelMap model) {
 		String name = getLoggedInUserName(model);
 		System.out.println(name);
-		model.put("todos", todoService.retrieveTodos(name));
+		model.put("todos", repository.findByUser(name));
+		//model.put("todos", todoService.retrieveTodos(name));
 		return "list-todos";
 	}
 
@@ -64,7 +71,9 @@ public class TodoController {
 		if(result.hasErrors()) {
 			return "todo";
 		}
-		todoService.addTodo(getLoggedInUserName(model), todo.getDescription(), todo.getTargetDate(), false);
+		todo.setUser(getLoggedInUserName(model));
+		repository.save(todo);
+		//todoService.addTodo(getLoggedInUserName(model), todo.getDescription(), todo.getTargetDate(), false);
 		
 		return "redirect:/list-todos";
 	}
@@ -72,14 +81,17 @@ public class TodoController {
 	@RequestMapping(value="/delete-todo", method = RequestMethod.GET)
 	//@ResponseBody
 	public String deleteTodo(@RequestParam int id) {
-		todoService.deleteTodo(id);
+		repository.deleteById(id);
+		//todoService.deleteTodo(id);
 		return "redirect:/list-todos";
 	}
 	
 	@RequestMapping(value="/update-todo", method = RequestMethod.GET)
 	//@ResponseBody
 	public String showUpdateTodoPage(@RequestParam int id, ModelMap model) {
-		Todo todo = todoService.retrieveTodo(id);
+		
+		Optional<Todo> todo = repository.findById(id);
+		//Todo todo = todoService.retrieveTodo(id);
 		model.put("todo", todo);
 		return "todo";
 	}
@@ -93,7 +105,8 @@ public class TodoController {
 			return "todo";
 		}
 		todo.setUser(getLoggedInUserName(model));
-		todoService.updateTodo(todo);
+		repository.save(todo);
+		//todoService.updateTodo(todo);
 		return "redirect:/list-todos";
 	}
 }
